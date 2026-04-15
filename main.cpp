@@ -7,8 +7,11 @@ using namespace std;
 class TrieNode
 {
 public:
-    // Each node has up to 26 children (for each letter)
-    TrieNode *children[26];
+    //// Each node has up to 26 children (for each letter)
+
+    // Fixed-size array for all 128 ASCII characters (was 26, causing bugs with uppercase)
+
+    TrieNode *children[128];
 
     // Marks if this node completes a word
     bool isEndOfWord;
@@ -17,7 +20,10 @@ public:
     TrieNode()
     {
         isEndOfWord = false;
-        for (int i = 0; i < 26; i++)
+
+        // Constructor - initialize all 128 child pointers to nullptr (not just a-z)
+        for (int i = 0; i < 128; i++) // 128 for full ASCII range, not 26
+
         {
             children[i] = nullptr;
         }
@@ -47,6 +53,8 @@ public:
     Trie()
     {
         // TODO: Implement this function
+
+        root = new TrieNode(); // Initialize root node
     }
 
     // Insert a word into the Trie
@@ -74,17 +82,15 @@ public:
     // Purpose: Verify if the prefix exists in the Trie (doesn't need to be a complete word)
     bool startsWith(const string &prefix) const
     {
-        if (prefix.empty())
-            return true;
 
         const TrieNode *current = root;
 
         for (char ch : prefix)
         {
-            if (ch < 'a' || ch > 'z')
-                return false;
 
-            int index = ch - 'a';
+            int index = static_cast<int>(ch);
+            if (index < 0 || index >= 128)
+                return false;
 
             if (current->children[index] == nullptr)
                 return false;
@@ -93,7 +99,6 @@ public:
         }
         return true;
     }
-
     // Get all words that start with the given prefix
     // Input: prefix to complete (string)
     // Output: vector of strings that start with the prefix
