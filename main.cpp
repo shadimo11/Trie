@@ -40,7 +40,7 @@ public:
     // Output: none
     // Purpose: Initialize the Trie with a root node
     Trie() {
-        // TODO: Implement this function
+        root = new TrieNode();
     }
     
     // Insert a word into the Trie
@@ -48,7 +48,22 @@ public:
     // Output: none
     // Purpose: Add a word to the Trie by creating nodes for each character
     void insert(string word) {
-        // TODO: Implement this function
+        TrieNode* current = root;
+
+        // Walk (and build) one node per character
+        for (char ch : word)
+        {
+            int index = (int)ch;
+
+            if (current->children[index] == nullptr)
+            {
+                current->children[index] = new TrieNode();
+            }
+
+            current = current->children[index];
+        }
+
+        current->isEndOfWord = true;
     }
     
     // Search for a word in the Trie
