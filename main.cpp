@@ -84,7 +84,17 @@ public:
     bool search(string word)
     {
         // TODO: Implement this function
-        return false; // placeholder
+        TrieNode* current = root;
+
+        for(char ch : word)
+        {
+            int index = (int)ch;
+            if(index < 0 || index >= 128) return false;
+            if(current->children[index] == nullptr)return false;
+            current = current->children[index];
+        }
+
+        return current->isEndOfWord; // placeholder
     }
 
     // Check if any word starts with the given prefix
